@@ -41,4 +41,10 @@ public interface StudentMapper extends BaseMapper<Student> {
     * */
     @Select("select uuid,name,number,student_class,attendance_time,status from student s,time t where s.uuid = t.student_uuid and t.date = #{date} order by attendance_time,number")
     List<Student> getAllByDate(String date);
+
+    /*
+    * 检验登陆信息
+    * */
+    @Select("select uuid,username,password from student where username = #{username} and password = #{password}")
+    Student check(String username, String password);
 }

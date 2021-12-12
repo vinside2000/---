@@ -25,4 +25,6 @@ public interface StudentService extends IService<Student> {
     Student getOne(String uuid);
 
     List<Student> getAllByDate(String date);
+
+    Student check(String username, String password);
 }

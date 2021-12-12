@@ -6,6 +6,7 @@ import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.IdUtil;
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.example.springbootofandroid.entity.Admin;
 import com.example.springbootofandroid.entity.Student;
@@ -59,10 +60,14 @@ public class StudentController {
      * 登陆验证
      * */
     @PostMapping("/login")
-    public Boolean login(Student student){
-        if (studentService.getOne(Wrappers.<Student>lambdaQuery()
-                .eq(Student::getUsername,student.getUsername())
-                .eq(Student::getPassword,student.getPassword()))!=null)
+    public Boolean login(String json){
+        Student student = null;
+        try {
+            student = JSON.parseObject(json,Student.class);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        if (studentService.check(student.getUsername(),student.getPassword())!=null)
             return true;
         return false;
     }

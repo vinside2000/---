@@ -47,4 +47,9 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         return studentMapper.getAllByDate(date);
     }
 
+    @Override
+    public Student check(String username, String password) {
+        return studentMapper.check(username,password);
+    }
+
 }
