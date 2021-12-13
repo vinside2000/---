@@ -13,6 +13,7 @@ import com.example.springbootofandroid.entity.Student;
 import com.example.springbootofandroid.entity.Time;
 import com.example.springbootofandroid.service.StudentService;
 import com.example.springbootofandroid.service.TimeService;
+import com.example.springbootofandroid.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,11 +38,13 @@ public class StudentController {
     @Autowired
     private TimeService timeService;
 
+    Result result = new Result();
+
     /*
     * 签到
     * */
     @PostMapping("/attendance")
-    public String attendance(@RequestParam String uuid){
+    public Result attendance(@RequestParam String uuid){
         String date = DateUtil.today();
         Time time = timeService.getOne(Wrappers.<Time>lambdaQuery().eq(Time::getStudentUuid,uuid)
                 .eq(Time::getDate, DateUtil.parse(date))
@@ -51,33 +54,47 @@ public class StudentController {
             time.setAttendanceTime(DateUtil.date());
             time.setStatus(1);
             timeService.updateById(time);
-            return "签到成功";
+            result.setSuccess("签到成功！",JSON.toJSONString(time));
+            return result;
         }
-        return "签到失败";
+        result.setInfo("签到失败！",null);
+        return result;
     }
 
     /*
      * 登陆验证
      * */
     @PostMapping("/login")
-    public Boolean login(String json){
+    public Result login(String json_student){
         Student student = null;
         try {
-            student = JSON.parseObject(json,Student.class);
+            student = JSON.parseObject(json_student,Student.class);
         }catch (Exception e){
             e.printStackTrace();
         }
-        if (studentService.check(student.getUsername(),student.getPassword())!=null)
-            return true;
-        return false;
+        Student _student = studentService.check(student.getUsername(),student.getPassword());
+        if (_student != null){
+            result.setSuccess("登陆成功！",JSON.toJSONString(_student));
+            return result;
+        }
+        result.setInfo("帐号或密码错误！",null);
+        return result;
     }
 
     /*
      * 修改信息
      * */
     @PostMapping("/update")
-    public void update(Student student){
+    public Result update(String json_student){
+        Student student = null;
+        try {
+            student = JSON.parseObject(json_student,Student.class);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         studentService.updateById(student);
+        result.setSuccess("修改成功",null);
+        return result;
     }
 }
 
