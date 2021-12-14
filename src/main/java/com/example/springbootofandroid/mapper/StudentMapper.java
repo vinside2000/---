@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -34,7 +35,7 @@ public interface StudentMapper extends BaseMapper<Student> {
     * 根据uuid查询一个学生
     * */
     @Select("select * from student where uuid = #{uuid}")
-    Student getOne(String uuid);
+    Student getOne(Serializable uuid);
 
     /*
     * 先根据日期筛选，然后根据签到时间升序（未签到的则显示在前面），最后根据学号升序

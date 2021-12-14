@@ -17,6 +17,7 @@ import com.example.springbootofandroid.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -48,10 +49,10 @@ public class AdminController {
     * 登陆验证
     * */
     @PostMapping("/login")
-    public Result login(String json_admin){
+    public Result login(String json){
         Admin admin = null;
         try {
-            admin = JSON.parseObject(json_admin,Admin.class);
+            admin = JSON.parseObject(json,Admin.class);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -70,10 +71,10 @@ public class AdminController {
     * 添加一个管理员
     * */
     @PostMapping("/save")
-    public Result save(String json_admin){
+    public Result save(String json){
         Admin admin = null;
         try {
-            admin = JSON.parseObject(json_admin,Admin.class);
+            admin = JSON.parseObject(json,Admin.class);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -106,10 +107,10 @@ public class AdminController {
     * 添加一条学生信息
     * */
     @PostMapping("/saveStu")
-    public Result saveStu(String json_student){
+    public Result saveStu(String json){
         Student student = null;
         try {
-            student = JSON.parseObject(json_student,Student.class);
+            student = JSON.parseObject(json,Student.class);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -143,7 +144,7 @@ public class AdminController {
     * 查看某个学生的详情
     * */
     @GetMapping("/detail/{uuid}")
-    public Result detail(@PathVariable String uuid){
+    public Result detail(@PathVariable Serializable uuid){
         result.setSuccess("查询成功",JSON.toJSONString(studentService.getOne(uuid)));
         return result;
     }
@@ -152,10 +153,10 @@ public class AdminController {
     * 修改学生信息
     * */
     @PostMapping("/update")
-    public Result update(String json_student){
+    public Result update(String json){
         Student student = null;
         try {
-            student = JSON.parseObject(json_student,Student.class);
+            student = JSON.parseObject(json,Student.class);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -168,7 +169,7 @@ public class AdminController {
     * 删除学生信息，及其签到情况
     * */
     @PostMapping("/delete")
-    public Result delete(@RequestParam String uuid){
+    public Result delete(@RequestParam Serializable uuid){
         studentService.removeById(uuid);
         timeService.remove(Wrappers.<Time>lambdaQuery().eq(Time::getStudentUuid,uuid));
         result.setSuccess("删除成功!",null);

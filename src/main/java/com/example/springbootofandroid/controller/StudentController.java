@@ -65,10 +65,10 @@ public class StudentController {
      * 登陆验证
      * */
     @PostMapping("/login")
-    public Result login(String json_student){
+    public Result login(String json){
         Student student = null;
         try {
-            student = JSON.parseObject(json_student,Student.class);
+            student = JSON.parseObject(json,Student.class);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -85,10 +85,10 @@ public class StudentController {
      * 修改信息
      * */
     @PostMapping("/update")
-    public Result update(String json_student){
+    public Result update(String json){
         Student student = null;
         try {
-            student = JSON.parseObject(json_student,Student.class);
+            student = JSON.parseObject(json,Student.class);
         }catch (Exception e){
             e.printStackTrace();
         }

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Service;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public interface StudentService extends IService<Student> {
 
     List<Student> getAll();
 
-    Student getOne(String uuid);
+    Student getOne(Serializable uuid);
 
     List<Student> getAllByDate(String date);
 
