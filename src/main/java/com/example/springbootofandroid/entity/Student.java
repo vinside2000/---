@@ -43,6 +43,8 @@ public class Student implements Serializable {
 
     private Date attendanceTime;
 
+    private Date date;
+
     private Integer status;
 
 }

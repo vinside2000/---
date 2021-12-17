@@ -1,6 +1,7 @@
 package com.example.springbootofandroid.service.impl;
 
 import com.example.springbootofandroid.entity.Student;
+import com.example.springbootofandroid.entity.Time;
 import com.example.springbootofandroid.mapper.StudentMapper;
 import com.example.springbootofandroid.service.StudentService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -44,13 +45,23 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     }
 
     @Override
-    public List<Student> getAllByDate(String date) {
+    public List<Student> getAllByDate(Serializable date) {
         return studentMapper.getAllByDate(date);
     }
 
     @Override
     public Student check(String username, String password) {
         return studentMapper.check(username,password);
+    }
+
+    @Override
+    public Time getAttendance(Serializable uuid, Serializable date) {
+        return studentMapper.getAttendance(uuid,date);
+    }
+
+    @Override
+    public List<Student> getStu() {
+        return studentMapper.getStu();
     }
 
 }

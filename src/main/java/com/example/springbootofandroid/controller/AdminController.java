@@ -18,9 +18,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * <p>
@@ -99,7 +101,7 @@ public class AdminController {
     * */
     @GetMapping("/getAll")
     public Result getAll(){
-        result.setSuccess("",JSON.toJSONString(studentService.getAll()));
+        result.setSuccess("查询成功",JSON.toJSONStringWithDateFormat(studentService.getAll(),"yyyy-MM-dd HH:mm:ss"));
         return result;
     }
 
@@ -125,20 +127,35 @@ public class AdminController {
     /*
     * 开启今日签到
     * */
-    @PostMapping("/start")
+    @GetMapping("/start")
     public Result start(){
-        List<String> uuidList = studentService.getAllUuid();
-        List<Time> timeList = new ArrayList<Time>();
-        for (String uuid : uuidList) {
-            Time time = new Time();
-            time.setDate(DateUtil.date());
-            time.setStudentUuid(uuid);
-            timeList.add(time);
+            List<String> uuidList = studentService.getAllUuid();
+            List<Time> timeList = new ArrayList<Time>();
+            for (String uuid : uuidList) {
+                Time time = new Time();
+                time.setDate(DateUtil.date());
+                time.setStudentUuid(uuid);
+                timeList.add(time);
+            }
+            timeService.saveBatch(timeList);
+            result.setSuccess("签到成功开启",null);
+            return result;
+    }
+
+    @GetMapping("/ifStart")
+    public Result ifStart(){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+        String date = sdf.format(new Date());
+        Time one = timeService.getOne(Wrappers.<Time>lambdaQuery().eq(Time::getDate, date).last("LIMIT 1"));
+        if (one != null){
+            result.setInfo("签到已开启",null);
+            return result;
         }
-        timeService.saveBatch(timeList);
-        result.setSuccess("签到成功开启",null);
+        result.setSuccess("签到未开启",null);
         return result;
     }
+
 
     /*
     * 查看某个学生的详情
@@ -180,8 +197,17 @@ public class AdminController {
     * 先根据日期筛选，然后根据签到时间升序（未签到的则显示在前面），最后根据学号升序
     * */
     @GetMapping("/byDate")
-    public Result byDate(String date){
-        result.setSuccess("查询成功",JSON.toJSONString(studentService.getAllByDate(date)));
+    public Result byDate(){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+        String date = sdf.format(new Date());
+        result.setSuccess("查询成功",JSON.toJSONStringWithDateFormat(studentService.getAllByDate(date),"yyyy-MM-dd"));
+        return result;
+    }
+
+    @GetMapping("/getStu")
+    public Result getStu(){
+        result.setSuccess("查询成功",JSON.toJSONString(studentService.getStu()));
         return result;
     }
 

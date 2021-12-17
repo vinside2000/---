@@ -2,6 +2,7 @@ package com.example.springbootofandroid.service;
 
 import com.example.springbootofandroid.entity.Student;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.springbootofandroid.entity.Time;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +26,11 @@ public interface StudentService extends IService<Student> {
 
     Student getOne(Serializable uuid);
 
-    List<Student> getAllByDate(String date);
+    List<Student> getAllByDate(Serializable date);
 
     Student check(String username, String password);
+
+    Time getAttendance(Serializable uuid,Serializable date);
+
+    List<Student> getStu();
 }

@@ -17,6 +17,7 @@ import com.example.springbootofandroid.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -43,8 +44,8 @@ public class StudentController {
     /*
     * 签到
     * */
-    @PostMapping("/attendance")
-    public Result attendance(@RequestParam String uuid){
+    @GetMapping("/attendance/{uuid}")
+    public Result attendance(@PathVariable Serializable uuid){
         String date = DateUtil.today();
         Time time = timeService.getOne(Wrappers.<Time>lambdaQuery().eq(Time::getStudentUuid,uuid)
                 .eq(Time::getDate, DateUtil.parse(date))
@@ -94,6 +95,17 @@ public class StudentController {
         }
         studentService.updateById(student);
         result.setSuccess("修改成功",null);
+        return result;
+    }
+
+    @GetMapping("get/{uuid}/{date}")
+    public Result get(@PathVariable Serializable uuid,@PathVariable Serializable date){
+        Time attendance = studentService.getAttendance(uuid,date);
+        if (attendance!=null){
+            result.setSuccess("查询成功",JSON.toJSONString(attendance));
+            return result;
+        }
+        result.setInfo("已签到！",null);
         return result;
     }
 }
